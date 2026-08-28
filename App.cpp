@@ -113,8 +113,10 @@ LRESULT CALLBACK WindowProc(HWND h, UINT m, WPARAM w, LPARAM l)
 		pt.x = GET_X_LPARAM(l);
 		pt.y = GET_Y_LPARAM(l);
 		ScreenToClient(h, &pt);
-		if (pt.y < top_height && pt.x < rect.right - (45 + 20 + 10))
-			return HTCAPTION;
+		if (!app.drag_locked && pt.y < top_height && pt.x < rect.right - (75 + 20 + 10))
+		{
+    		return HTCAPTION;
+		}
 		return HTCLIENT;
 	}
 	default:
