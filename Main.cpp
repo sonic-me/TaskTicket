@@ -60,8 +60,11 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, LPSTR lpCmd, int nSho
 
 	closeButton.Create(&app, app.width - 45 - 20 + 10, 15 + 10, 10, { 239, 68, 68 });
 	miniButton.Create(&app, app.width - 15 - 20 + 10, 15 + 10, 10, { 234, 179, 8 });
+	lockButton.Create(&app, app.width - 75 - 20 + 10, 15 + 10, 10, { 34, 197, 94 });
+
 	closeButton.callback = closeButtonCall;
 	miniButton.callback = miniButtonCall;
+	lockButton.callback = lockButtonCall;
 
 	UpdateWindowSize();
 
@@ -83,6 +86,7 @@ void Update()
 {
 	closeButton.Update();
 	miniButton.Update();
+	lockButton.Update();
 
 	size_t count = tasks.mTasks.size();
 	if (app.inputs[VK_UP]) { tasks.selected -= 1; }
@@ -170,6 +174,7 @@ void Draw(HDC hdc)
 
 	HPEN hPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0));
 	HPEN oldPen = SelectPen(hdc, hPen);
+	DrawButton(hdc, lockButton);
 	DrawButton(hdc, closeButton);
 	DrawButton(hdc, miniButton);
 	SelectPen(hdc, oldPen);
@@ -230,6 +235,11 @@ void appOnDrag(std::string file)
 {
 	tasks.LoadTaskFile(file);
 	UpdateWindowSize();
+}
+
+void lockButtonCall()
+{
+    app.drag_locked = !app.drag_locked;
 }
 
 void closeButtonCall()
