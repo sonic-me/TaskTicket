@@ -1,0 +1,40 @@
+name: Build TaskTicket
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+
+          $msbuild = & $vswhere -latest -products * `
+            -requires Microsoft.Component.MSBuild `
+            -find MSBuild\**\Bin\MSBuild.exe |
+            Select-Object -First 1
+
+          if (-not $msbuild) {
+            throw "MSBuild not found"
+          }
+
+          Write-Host "Using: $msbuild"
+
+          & $msbuild "$env:GITHUB_WORKSPACE\TODO.vcxproj" `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /m
+
+      - name: Upload compiled EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: TaskTicket
+          path: |
+            **\Release\*.exe
