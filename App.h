@@ -21,6 +21,7 @@ struct App {
 	bool running = false;
 	bool inputs[256] = { false };
 	bool mouse_down = false;
+	bool drag_locked = false;
 	std::function<void(std::string)> onDrag;
 
 	int InitApplication(HINSTANCE hInst, std::wstring Title, int Width, int Height);
