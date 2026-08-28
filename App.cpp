@@ -101,39 +101,43 @@ void App::Close()
 
 LRESULT CALLBACK WindowProc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
-	switch (m) {
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		break;
-	case case WM_NCHITTEST: {
-    const int top_height = 40;
+    switch (m) {
 
-    RECT rect;
-    POINT pt;
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        break;
 
-    GetClientRect(h, &rect);
+    case WM_NCHITTEST: {
+        const int top_height = 40;
 
-    pt.x = GET_X_LPARAM(l);
-    pt.y = GET_Y_LPARAM(l);
+        RECT rect;
+        POINT pt;
 
-    ScreenToClient(h, &pt);
+        GetClientRect(h, &rect);
 
-    App* app = reinterpret_cast<App*>(
-        GetWindowLongPtr(h, GWLP_USERDATA)
-    );
+        pt.x = GET_X_LPARAM(l);
+        pt.y = GET_Y_LPARAM(l);
 
-    if (app &&
-        !app->drag_locked &&
-        pt.y < top_height &&
-        pt.x < rect.right - (75 + 20 + 10))
-    {
-        return HTCAPTION;
+        ScreenToClient(h, &pt);
+
+        App* app = reinterpret_cast<App*>(
+            GetWindowLongPtr(h, GWLP_USERDATA)
+        );
+
+        if (app &&
+            !app->drag_locked &&
+            pt.y < top_height &&
+            pt.x < rect.right - (75 + 20 + 10))
+        {
+            return HTCAPTION;
+        }
+
+        return HTCLIENT;
     }
 
-    return HTCLIENT;
-}
-	default:
-		return DefWindowProc(h, m, w, l);
-	}
-	return 0;
+    default:
+        return DefWindowProc(h, m, w, l);
+    }
+
+    return 0;
 }
