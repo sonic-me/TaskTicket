@@ -222,7 +222,7 @@ void UpdateWindowSize()
 	AdjustWindowRect(&rc, WS_POPUPWINDOW, FALSE);
 	SetWindowPos(
 		app.hwnd,
-		HWND_TOPMOST,
+		HWND_NOTOPMOST,
 		0,
 		0,
 		rc.right - rc.left,
