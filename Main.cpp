@@ -34,6 +34,7 @@ void Render();
 void UpdateWindowSize();
 void closeButtonCall();
 void miniButtonCall();
+void lockButtonCall();
 void appOnDrag(std::string file);
 
 constexpr int pad_top = 10;
@@ -47,6 +48,7 @@ Font fontText;
 Tasks tasks;
 Button closeButton;
 Button miniButton;
+Button lockButton;
 
 //int main()
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, LPSTR lpCmd, int nShow)
