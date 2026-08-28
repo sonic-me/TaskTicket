@@ -41,6 +41,7 @@ int App::InitApplication(HINSTANCE hInst, std::wstring Title, int Width, int Hei
 	);
 	if (!hwnd)
 		return -1;
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 	DragAcceptFiles(hwnd, TRUE);
 	ShowWindow(hwnd, SW_NORMAL);
 	hdc = GetDC(hwnd);
@@ -104,21 +105,33 @@ LRESULT CALLBACK WindowProc(HWND h, UINT m, WPARAM w, LPARAM l)
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		break;
-	case WM_NCHITTEST: {
-		const int top_height = 40;
-		RECT rect;
-		POINT pt;
+	case case WM_NCHITTEST: {
+    const int top_height = 40;
 
-		GetClientRect(h, &rect);
-		pt.x = GET_X_LPARAM(l);
-		pt.y = GET_Y_LPARAM(l);
-		ScreenToClient(h, &pt);
-		if (!app.drag_locked && pt.y < top_height && pt.x < rect.right - (75 + 20 + 10))
-		{
-    		return HTCAPTION;
-		}
-		return HTCLIENT;
-	}
+    RECT rect;
+    POINT pt;
+
+    GetClientRect(h, &rect);
+
+    pt.x = GET_X_LPARAM(l);
+    pt.y = GET_Y_LPARAM(l);
+
+    ScreenToClient(h, &pt);
+
+    App* app = reinterpret_cast<App*>(
+        GetWindowLongPtr(h, GWLP_USERDATA)
+    );
+
+    if (app &&
+        !app->drag_locked &&
+        pt.y < top_height &&
+        pt.x < rect.right - (75 + 20 + 10))
+    {
+        return HTCAPTION;
+    }
+
+    return HTCLIENT;
+}
 	default:
 		return DefWindowProc(h, m, w, l);
 	}
