@@ -40,6 +40,7 @@ constexpr int pad_top = 10;
 constexpr int pad_left = 20;
 constexpr int pad_bottom = 10;
 constexpr int pad_right = 20;
+constexpr int task_gap = 10;
 App app;
 HBRUSH bgBrush;
 Font fontText;
@@ -150,14 +151,14 @@ void Draw(HDC hdc)
 		// draw
 		SetTextColor(hdc, RGB(textcolor.r, textcolor.g, textcolor.b));
 		SetBkColor(hdc, RGB(bgcolor.r, bgcolor.g, bgcolor.b));
-		TextOutA(hdc, pad_left, pad_top + 30 + 27 * line, str.c_str(), str.size());
+		TextOutA(hdc, pad_left, pad_top + 30 + task_gap + 27 * line, str.c_str(), str.size());
 		line += 1;
 	}
 
 	// time
 	{
 		int x = app.width - 95 - pad_right;
-		int y = pad_top + 30 + 27 * line;
+		int y = pad_top + 30 + task_gap + 27 * line;
 		SetTextColor(hdc, RGB(0xEB, 0xDB, 0xB2));
 		SetBkColor(hdc, RGB(0x28, 0x28, 0x28));
 		std::wstring time = GetLocalTime();
@@ -205,7 +206,7 @@ std::wstring GetLocalTime()
 
 void UpdateWindowSize()
 {
-	int height = pad_top + 30 + 27 * tasks.mTasks.size() + pad_bottom + 5; // task size
+	int height = pad_top + 30 + task_gap + 27 * tasks.mTasks.size() + pad_bottom + 5;  // task size
 	height += 27; // clock
 	RECT rc = {
 		0, 0, app.width,
